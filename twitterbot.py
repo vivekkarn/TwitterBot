@@ -14,7 +14,7 @@ class TwitterBot(object):
 
     def follow_followers(self):
         api = self.api
-        for follower in tweepy.Cursor(api.followers).items(1):
+        for follower in tweepy.Cursor(api.followers).items(self.count):
             try:
                 if not follower.following:
                     follower.follow()
@@ -25,16 +25,35 @@ class TwitterBot(object):
                 print(e.reason)
                 break
 
-    def like_tweets(self, query):
+    def like_tweets(self, search_query):
         api = self.api
-        for tweet in tweepy.Cursor(api.search, query).items(50):
+        file = open('tweet.json', 'w+')
+        for tweet in tweepy.Cursor(api.search, search_query).items(self.count):
             try:
                 if not tweet.favorited:
                     print("Tweek Liked")
                     tweet.favorite()
                 time.sleep(10)
+
             except tweepy.TweepError as e:
-                if e.api_code == 139:
+                if e.api_code == 139 or e.api_code == 144:
+                    print("Tweet already liked")
+                else:
+                    print(e.reason)
+                    break
+
+    def follow_from_tweets(self, search_query):
+        api = self.api
+        file = open('tweet.json', 'w+')
+        for tweet in tweepy.Cursor(api.search, search_query).items(self.count):
+            try:
+                if not tweet.user.following:
+                    tweet.user.follow()
+                    print("Followed from tweet is ", tweet.user.name)
+
+                time.sleep(10)
+            except tweepy.TweepError as e:
+                if e.api_code == 139 or e.api_code == 144:
                     print("Tweet already liked")
                 else:
                     print(e.reason)

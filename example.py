@@ -5,13 +5,13 @@ from twitterbot import TwitterBot
 
 
 # Twitter restricts number of bot activites by 1000 per day as of now.
-number_of_iterations = 100
+number_of_iterations = 50
 
-# Your query to search and like the terms
-query = 'doctors'
+# Your query to search and like the tweets.
+search_query = 'medical%20students'
 
 # The SECRECT_KEY, SECRET_TOKEN, ACCESS_KEY, ACESS_TOKEN
-# is available at https://developer.twitter.com/en/apps
+# can be accessed from https://developer.twitter.com/en/apps
 
 bot = TwitterBot(number_of_iterations, SECRECT_KEY,
                  SECRET_TOKEN, ACCESS_KEY, ACESS_TOKEN)
@@ -20,4 +20,6 @@ bot = TwitterBot(number_of_iterations, SECRECT_KEY,
 bot.follow_followers()
 
 # Like 100 tweets from the provided query
-bot.like_tweets(query)
+bot.like_tweets(search_query)
+
+bot.follow_from_tweets(search_query)
